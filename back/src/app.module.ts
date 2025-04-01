@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { FilesModule } from './files/files.module';
+import { JobsModule } from './jobs/jobs.module';
+import { Job } from 'bullmq';
 
 @Module({
     imports: [
@@ -11,15 +14,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
             },
         }),
         TypeOrmModule.forRoot({
-            type: 'mysql',
+            type: "postgres",
             host: 'localhost',
             port: 3306,
-            username: 'root',
-            password: 'root',
-            database: 'test',
-            entities: [],
+            username: "root",
+            password: "root",
+            database: "coursero",
+            entities: [Job],
             synchronize: true,
-        })
+        }),
+        FilesModule,
+        JobsModule
     ],
     controllers: [],
     providers: [],
