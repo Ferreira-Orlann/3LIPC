@@ -1,5 +1,5 @@
 NODES = [
-	["manage", "192.168.189.100", "manager"],
+	["manager", "192.168.189.100", "manager"],
 	# ["manager2", "192.168.189.101", "manager"],
 	# ["manager3", "192.168.189.102", "manager"],
 ]
