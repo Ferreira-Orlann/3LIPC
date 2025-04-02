@@ -1,11 +1,17 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Job } from "./jobs.entity";
+import { Job, ProcessedJob } from "./jobs.entity";
 import { Repository } from "typeorm";
+import { InjectQueue } from "@nestjs/bullmq";
+import { Queue } from "bullmq";
+import { File } from "./files.type";
 
 @Injectable()
 export class JobsService {
-    constructor(@InjectRepository(Job) private readonly repo: Repository<Job>) {}
+    constructor(
+        @InjectRepository(Job) private readonly repo: Repository<Job>,
+        @InjectQueue("jobs") private readonly queue: Queue  
+    ) {}
 
     findAll(): Promise<Job[]> {
         return this.repo.find();
@@ -20,9 +26,18 @@ export class JobsService {
         });
     }
 
-    create(jobData: Partial<Job>): Promise<Job> {
-        const job = this.repo.create(jobData);
-        return this.repo.save(job);
+    create(jobData: Partial<Job>, file: File): Promise<Job> {
+        let job = this.repo.create(jobData);
+        return new Promise(async (resolve, reject) => {
+            job = await this.repo.save(job)
+            resolve(job)
+            this.queue.add(job.uuid, {
+                job: job,
+                file: file
+            } as ProcessedJob, {
+                jobId: job.uuid
+            })
+        })
     }
 
     update(id: number, jobData: Partial<Job>): Promise<Job> {

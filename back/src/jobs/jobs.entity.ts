@@ -1,5 +1,7 @@
+import { IsNumber, IsString } from "class-validator";
 import { randomUUID, UUID } from "crypto";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { File } from "./files.type";
 
 export enum JobStatus {
     WAITING = "waiting",
@@ -16,13 +18,18 @@ export enum JobGrade {
     D = "D"
 }
 
+export class CreateJobDto {
+    @IsString()
+    name: string
+}
+
 @Entity()
 export class Job {
     @PrimaryGeneratedColumn()
     id: number
 
     @Column({
-        default: () => randomUUID()
+        default: randomUUID()
     })
     uuid: UUID
 
@@ -30,7 +37,8 @@ export class Job {
     name: string
 
     @Column({
-        enum: JobStatus
+        enum: JobStatus,
+        default: JobStatus.PROCESSING
     })
     status: JobStatus
 
@@ -40,12 +48,21 @@ export class Job {
     })
     grade: JobGrade
 
-    @Column()
+    @CreateDateColumn()
     publish_date: Date
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     finish_data: Date
 
-    @Column()
+    @Column({
+        nullable: true
+    })
     completion_time: number
+}
+
+export type ProcessedJob = {
+    job: Job,
+    file: File
 }
