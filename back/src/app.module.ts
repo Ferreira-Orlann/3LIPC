@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JobsModule } from './jobs/jobs.module';
 import { Job } from './jobs/jobs.entity';
 import { JobsConsummer } from './jobs/jobs.processor';
+import { Exercice } from './exercices/exercices.entity';
 
 @Module({
     imports: [
@@ -21,7 +22,7 @@ import { JobsConsummer } from './jobs/jobs.processor';
             username: "postgres",
             password: "postgres",
             database: "coursero",
-            entities: [Job],
+            entities: [Job, Exercice],
             synchronize: true
         }),
         JobsModule

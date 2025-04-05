@@ -13,8 +13,7 @@ export class JobsConsummer extends WorkerHost {
             if (err) {
                 throw err
             }
-            console.log(extract)
-            extract(`${process.cwd()}/data/${job.data.job.uuid}.zip`, `${process.cwd()}/${job.data.job.uuid}`)
+            extract(`${process.cwd()}/data/${job.data.job.uuid}.zip`, `${process.cwd()}/data/${job.data.job.uuid}`)
                 .then(() => {
 
                 })

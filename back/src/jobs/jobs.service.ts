@@ -5,6 +5,7 @@ import { Repository } from "typeorm";
 import { InjectQueue } from "@nestjs/bullmq";
 import { Queue } from "bullmq";
 import { File } from "./files.type";
+import { UUID } from "crypto";
 
 @Injectable()
 export class JobsService {
@@ -18,9 +19,18 @@ export class JobsService {
     }
 
     findOne(id: number): Promise<Job> {
-        return this.repo.findOne({ where: { id } }).then(job => {
+        return this.repo.findOne({ where: { id: id } }).then(job => {
             if (!job) {
                 throw new NotFoundException(`Job with ID ${id} not found`);
+            }
+            return job;
+        });
+    }
+
+    findOneByUuid(uuid: UUID): Promise<Job> {
+        return this.repo.findOne({ where: { uuid: uuid } }).then(job => {
+            if (!job) {
+                throw new NotFoundException(`Job with UUID ${uuid} not found`);
             }
             return job;
         });
@@ -41,7 +51,7 @@ export class JobsService {
     }
 
     update(id: number, jobData: Partial<Job>): Promise<Job> {
-        return this.findOne(id).then(() => {
+        return this.findOne(id).then((job) => {
             return this.repo.update(id, jobData).then(() => this.findOne(id));
         });
     }
