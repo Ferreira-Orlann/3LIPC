@@ -1,11 +1,37 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './CodeSubmission.css';
+import { submitCodeJob, getExercises, getJobStatus } from '../api/api.ts';
+
+// Définition du type pour le statut du job
+interface JobStatus {
+  uuid: string;
+  status: string;
+  grade: number | null;
+  finish_data: string | null;
+  completion_time: string | null;
+}
 
 const CodeSubmission = () => {
   const [course, setCourse] = useState('');
   const [exercise, setExercise] = useState('');
   const [language, setLanguage] = useState('');
   const [file, setFile] = useState<File | null>(null);
+  const [exercises, setExercises] = useState<any[]>([]);
+  const [jobStatus, setJobStatus] = useState<JobStatus | null>(null); // Utilisation de JobStatus ici
+
+  useEffect(() => {
+    const fetchExercises = async () => {
+      try {
+        const data = await getExercises();
+        console.log(data);
+        setExercises(data);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des exercices :', error);
+      }
+    };
+
+    fetchExercises();
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -18,31 +44,17 @@ const CodeSubmission = () => {
       alert('Merci de remplir tous les champs et de téléverser un fichier.');
       return;
     }
-  
-    const formData = new FormData();
-    formData.append('course', course);
-    formData.append('exercise', exercise);
-    formData.append('language', language);
-    formData.append('file', file);
-  
+
     try {
-      const response = await fetch('http://localhost:5173/', {
-        method: 'POST',
-        body: formData,
-      });
-  
-      if (response.ok) {
-        alert('Fichier soumis avec succès !');
-      } else {
-        const errorData = await response.json();
-        alert(`Erreur : ${errorData.message || 'soumission échouée'}`);
-      }
-    } catch (error) {
-      console.error('Erreur lors de la requête :', error);
-      alert("Une erreur est survenue lors de l'envoi du fichier.");
+      const jobResponse = await submitCodeJob(course, exercise, file);
+      alert('Fichier soumis avec succès !');
+      // Après soumission, récupérer le statut du job
+      const status = await getJobStatus(jobResponse.uuid);
+      setJobStatus(status); // Mise à jour du jobStatus avec le type JobStatus
+    } catch (error: any) {
+      alert(`Erreur : ${error.message}`);
     }
   };
-  
 
   return (
     <div className="wrapper">
@@ -71,8 +83,11 @@ const CodeSubmission = () => {
           onChange={(e) => setExercise(e.target.value)}
         >
           <option value="">Choisir un exercice</option>
-          <option value="exercise1">Exercice 1</option>
-          <option value="exercise2">Exercice 2</option>
+          {exercises.map((ex: any) => (
+            <option key={ex.uuid} value={ex.uuid}>
+              {ex.name || ex.title || ex.uuid}
+            </option>
+          ))}
         </select>
       </div>
 
@@ -100,13 +115,24 @@ const CodeSubmission = () => {
         />
       </div>
 
-    <div className="actions">
+      <div className="actions">
         <button className="button" onClick={handleSubmit}>
-        Soumettre
+          Soumettre
         </button>
+      </div>
+
+      {/* Affichage du statut et de la note */}
+      {jobStatus && (
+        <div className="status-info">
+          <h3>Statut du Job</h3>
+          <p><strong>Statut :</strong> {jobStatus.status}</p>
+          <p><strong>Note :</strong> {jobStatus.grade ?? 'Non disponible'}</p>
+          <p><strong>Temps de finition :</strong> {jobStatus.finish_data ?? 'Non terminé'}</p>
+          <p><strong>Temps de complétion :</strong> {jobStatus.completion_time ?? 'Non disponible'}</p>
+        </div>
+      )}
     </div>
-    </div>
-);
+  );
 };
 
 export default CodeSubmission;
