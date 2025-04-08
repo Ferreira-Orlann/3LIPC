@@ -3,8 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import JobList from './pages/JobList';
 import CodeSubmission from './pages/CodeSubmission';
-import './pages/JobList.css';
-import './pages/CodeSubmission.css';
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>

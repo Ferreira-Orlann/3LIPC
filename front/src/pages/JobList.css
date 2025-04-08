@@ -1,5 +1,11 @@
-.wrapper {
+body {
+    background-color: #000000;
+}
+.jobs {
     max-width: 900px;
+
+  justify-content: center;
+  align-items: center;
     margin: 0 auto;
     padding: 2rem;
     background-color: #fdfdfd;

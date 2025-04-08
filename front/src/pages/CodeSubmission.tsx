@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './CodeSubmission.css';
 import { submitCodeJob, getExercises } from '../api/api.ts';
-
-
-
+import { useNavigate } from 'react-router-dom';
 
 const CodeSubmission = () => {
   const [course, setCourse] = useState('');
@@ -11,6 +9,8 @@ const CodeSubmission = () => {
   const [language, setLanguage] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [exercises, setExercises] = useState<any[]>([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -41,6 +41,7 @@ const CodeSubmission = () => {
     try {
     await submitCodeJob(course, exercise, file);
     alert('Fichier soumis avec succès !');
+    navigate('/');
   } catch (error: any) {
     alert(`Erreur : ${error.message}`);
   }

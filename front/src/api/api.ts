@@ -26,8 +26,8 @@ export const submitCodeJob = async (
 
 
 
-export const getJobStatus = async (uuid: string): Promise<any> => {
-  const response = await fetch(`${BASE_URL}/jobs/${uuid}`, {
+export const getJobStatus = async (): Promise<any[]> => {
+  const response = await fetch(`${BASE_URL}/jobs/`, {
     method: 'GET',
   });
 
