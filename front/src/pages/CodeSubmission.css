@@ -1,13 +1,14 @@
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    font-family: 'Roboto', sans-serif;
-    background-color: #000;
-    color: #000;
-  }
+.CodeSubmission .body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #000;
+  color: #fff;
+}
+
   
   .wrapper {
     background-color: #fff;

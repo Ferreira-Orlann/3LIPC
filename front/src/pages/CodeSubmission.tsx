@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './CodeSubmission.css';
 import { submitCodeJob, getExercises } from '../api/api.ts';
 
-// Définition du type pour le statut du job
+
 
 
 const CodeSubmission = () => {
@@ -47,71 +47,74 @@ const CodeSubmission = () => {
   };
 
   return (
-    <div className="wrapper">
-      <h1 className="title">Soumission de Code</h1>
+    <div className="CodeSubmission">
+        <div className="body">
+            <div className="wrapper">
+              <h1 className="title">Soumission de Code</h1>
 
-      <div className="group">
-        <label htmlFor="course" className="label">Cours</label>
-        <select
-          id="course"
-          className="input"
-          value={course}
-          onChange={(e) => setCourse(e.target.value)}
-        >
-          <option value="">Choisir un cours</option>
-          <option value="course1">Cours 1</option>
-          <option value="course2">Cours 2</option>
-        </select>
-      </div>
+              <div className="group">
+                <label htmlFor="course" className="label">Cours</label>
+                <select
+                  id="course"
+                  className="input"
+                  value={course}
+                  onChange={(e) => setCourse(e.target.value)}
+                >
+                  <option value="">Choisir un cours</option>
+                  <option value="course1">Cours 1</option>
+                  <option value="course2">Cours 2</option>
+                </select>
+              </div>
 
-      <div className="group">
-        <label htmlFor="exercise" className="label">Exercice</label>
-        <select
-          id="exercise"
-          className="input"
-          value={exercise}
-          onChange={(e) => setExercise(e.target.value)}
-        >
-          <option value="">Choisir un exercice</option>
-          {exercises.map((ex: any) => (
-            <option key={ex.uuid} value={ex.uuid}>
-              {ex.name || ex.title || ex.uuid}
-            </option>
-          ))}
-        </select>
-      </div>
+              <div className="group">
+                <label htmlFor="exercise" className="label">Exercice</label>
+                <select
+                  id="exercise"
+                  className="input"
+                  value={exercise}
+                  onChange={(e) => setExercise(e.target.value)}
+                >
+                  <option value="">Choisir un exercice</option>
+                  {exercises.map((ex: any) => (
+                    <option key={ex.uuid} value={ex.uuid}>
+                      {ex.name || ex.title || ex.uuid}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-      <div className="group">
-        <label htmlFor="language" className="label">Langage</label>
-        <select
-          id="language"
-          className="input"
-          value={language}
-          onChange={(e) => setLanguage(e.target.value)}
-        >
-          <option value="">Choisir un langage</option>
-          <option value="python">Python</option>
-          <option value="c">C</option>
-        </select>
-      </div>
+              <div className="group">
+                <label htmlFor="language" className="label">Langage</label>
+                <select
+                  id="language"
+                  className="input"
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value)}
+                >
+                  <option value="">Choisir un langage</option>
+                  <option value="python">Python</option>
+                  <option value="c">C</option>
+                </select>
+              </div>
 
-      <div className="group">
-        <label htmlFor="file" className="label">Fichier</label>
-        <input
-          type="file"
-          id="file"
-          className="input"
-          onChange={handleFileChange}
-        />
-      </div>
+              <div className="group">
+                <label htmlFor="file" className="label">Fichier</label>
+                <input
+                  type="file"
+                  id="file"
+                  className="input"
+                  onChange={handleFileChange}
+                />
+              </div>
 
-      <div className="actions">
-        <button className="button" onClick={handleSubmit}>
-          Soumettre
-        </button>
-      </div>
-
-    </div>
+              <div className="actions">
+                <button className="button" onClick={handleSubmit}>
+                  Soumettre
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
   );
 };
 
