@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './CodeSubmission.css';
-import { submitCodeJob, getExercises, getJobStatus } from '../api/api.ts';
+import { submitCodeJob, getExercises } from '../api/api.ts';
 
 // Définition du type pour le statut du job
-interface JobStatus {
-  uuid: string;
-  status: string;
-  grade: number | null;
-  finish_data: string | null;
-  completion_time: string | null;
-}
+
 
 const CodeSubmission = () => {
   const [course, setCourse] = useState('');
@@ -17,7 +11,6 @@ const CodeSubmission = () => {
   const [language, setLanguage] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [exercises, setExercises] = useState<any[]>([]);
-  const [jobStatus, setJobStatus] = useState<JobStatus | null>(null); // Utilisation de JobStatus ici
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -46,14 +39,11 @@ const CodeSubmission = () => {
     }
 
     try {
-      const jobResponse = await submitCodeJob(course, exercise, file);
-      alert('Fichier soumis avec succès !');
-      // Après soumission, récupérer le statut du job
-      const status = await getJobStatus(jobResponse.uuid);
-      setJobStatus(status); // Mise à jour du jobStatus avec le type JobStatus
-    } catch (error: any) {
-      alert(`Erreur : ${error.message}`);
-    }
+    await submitCodeJob(course, exercise, file);
+    alert('Fichier soumis avec succès !');
+  } catch (error: any) {
+    alert(`Erreur : ${error.message}`);
+  }
   };
 
   return (
@@ -121,16 +111,6 @@ const CodeSubmission = () => {
         </button>
       </div>
 
-      {/* Affichage du statut et de la note */}
-      {jobStatus && (
-        <div className="status-info">
-          <h3>Statut du Job</h3>
-          <p><strong>Statut :</strong> {jobStatus.status}</p>
-          <p><strong>Note :</strong> {jobStatus.grade ?? 'Non disponible'}</p>
-          <p><strong>Temps de finition :</strong> {jobStatus.finish_data ?? 'Non terminé'}</p>
-          <p><strong>Temps de complétion :</strong> {jobStatus.completion_time ?? 'Non disponible'}</p>
-        </div>
-      )}
     </div>
   );
 };
